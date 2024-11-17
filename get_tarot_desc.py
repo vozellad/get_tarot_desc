@@ -1,4 +1,6 @@
 import os
+import sys
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import json
@@ -28,15 +30,15 @@ def get_desc_from_url(driver):
 
 
 def get_card_url(user_input):
-    words = user_input.split()
+    words = user_input.upper().split()
     if not words:
-        raise ValueError("card doesn't exist")
+        raise ValueError(f"card {user_input} doesn't exist")
     initial = words[0]
 
     if len(words) > 1:
         final = words[1]
         minor_arcana = {
-        '1': 'one',
+        '1': 'ace',
         '2': 'two',
         '3': 'three',
         '4': 'four',
@@ -46,21 +48,21 @@ def get_card_url(user_input):
         '8': 'eight',
         '9': 'nine',
         '10': 'ten',
-        'p': 'page',
-        'kn': 'knight',
-        'k': 'king',
-        'q': 'queen',
+        'P': 'page',
+        'KN': 'knight',
+        'K': 'king',
+        'Q': 'queen',
     }
         suits = {
-        'c': 'cups',
-        'p': 'pentacles',
-        's': 'swords',
-        'w': 'wands',
+        'C': 'cups',
+        'P': 'pentacles',
+        'S': 'swords',
+        'W': 'wands',
     }
         initial = minor_arcana.get(initial)
         final = suits.get(final)
         if not final:
-            raise ValueError("card doesn't exist")
+            raise ValueError(f"card {user_input} doesn't exist")
         return f'{initial}-of-{final}-meaning'
 
     major_arcana = {
@@ -90,7 +92,7 @@ def get_card_url(user_input):
     card = major_arcana.get(initial)
     if card:
         return f'{card}-meaning-major-arcana'
-    raise ValueError("card doesn't exist")
+    raise ValueError(f"card {user_input} doesn't exist")
 
 
 def get_desc_from_file(user_input):
@@ -117,7 +119,9 @@ def write_desc_to_file(user_input, desc):
 
 
 def main():
-    user_input = input('>> ')
+    arg = sys.argv[1:]
+    arg = ' '.join(arg)
+    user_input = arg if arg else input('>> ')
     desc = get_desc_from_file(user_input)
     if not desc:
         desc = get_desc_from_web(user_input)
