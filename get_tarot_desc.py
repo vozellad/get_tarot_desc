@@ -121,8 +121,8 @@ def write_desc_to_file(user_input, desc):
 def main():
     arg = sys.argv[1:]
     arg = ' '.join(arg)
-    while True:
-        user_input = arg if arg else input('>> ')
+    user_input = arg if arg else input('>> ')
+    while user_input not in ['exit', 'quit', 'done', 'q']:
         desc = get_desc_from_file(user_input)
         if not desc:
             desc = get_desc_from_web(user_input)
@@ -130,6 +130,7 @@ def main():
         print(desc, '\n')
         if arg:
             break
+        user_input = input('>> ')
 
 
 if __name__ == '__main__':
