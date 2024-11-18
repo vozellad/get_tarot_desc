@@ -39,6 +39,7 @@ def get_card_url(user_input):
         final = words[1]
         minor_arcana = {
         '1': 'ace',
+        'a': 'ace',
         '2': 'two',
         '3': 'three',
         '4': 'four',
