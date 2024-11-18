@@ -121,12 +121,15 @@ def write_desc_to_file(user_input, desc):
 def main():
     arg = sys.argv[1:]
     arg = ' '.join(arg)
-    user_input = arg if arg else input('>> ')
-    desc = get_desc_from_file(user_input)
-    if not desc:
-        desc = get_desc_from_web(user_input)
-        write_desc_to_file(user_input, desc)
-    print(desc, '\n')
+    while True:
+        user_input = arg if arg else input('>> ')
+        desc = get_desc_from_file(user_input)
+        if not desc:
+            desc = get_desc_from_web(user_input)
+            write_desc_to_file(user_input, desc)
+        print(desc, '\n')
+        if arg:
+            break
 
 
 if __name__ == '__main__':
