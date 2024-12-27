@@ -39,7 +39,7 @@ def get_card_url(user_input):
         final = words[1]
         minor_arcana = {
         '1': 'ace',
-        'a': 'ace',
+        'A': 'ace',
         '2': 'two',
         '3': 'three',
         '4': 'four',
@@ -110,28 +110,36 @@ def get_desc_from_file(user_input):
 def write_desc_to_file(user_input, desc):
     global file_name
 
-    with open('cards.txt', 'w') as f:
-        d = {}
-        # if file empty or uncreated
-        if os.path.isfile(file_name) and os.stat(file_name).st_size > 0:
+    d = {}
+
+    # if file exists and has content
+    if os.path.isfile(file_name) and os.stat(file_name).st_size > 0:
+        with open(file_name, 'r') as f:
             d = json.load(f)
-        d[user_input] = desc
-        json.dump(d, f)
+
+    d[user_input] = desc
+
+    with open(file_name, 'w') as f:
+        json.dump(d, f, indent=1)
 
 
 def main():
     arg = sys.argv[1:]
     arg = ' '.join(arg)
-    user_input = arg if arg else input('>> ')
+    input_sym = ':: '
+    user_input = arg if arg else input(input_sym)
     while user_input not in ['exit', 'quit', 'done', 'q']:
         desc = get_desc_from_file(user_input)
         if not desc:
-            desc = get_desc_from_web(user_input)
-            write_desc_to_file(user_input, desc)
+            try:
+                desc = get_desc_from_web(user_input)
+                write_desc_to_file(user_input, desc)
+            except ValueError as e:
+                desc = e
         print(desc, '\n')
         if arg:
             break
-        user_input = input('>> ')
+        user_input = input(input_sym)
 
 
 if __name__ == '__main__':
